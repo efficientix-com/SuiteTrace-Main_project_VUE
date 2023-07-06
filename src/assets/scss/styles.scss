@@ -1,0 +1,313 @@
+// Variables 
+$font-family-sans-serif: "Segoe UI", sans-serif;
+$widthContent: 95%; //area de trabajo cuando se expande o minimiza menu
+$height: 100%;
+$top: 90px; //Este se deja por el menú de Netsuite
+$menuBarColor: rgb(29, 34, 40); // color de fondo de barra de navegación
+$h3Size: 25px !important; // Está en important porque Netsuite sobreescribe
+$textWhite: #f2f2f2;
+$green-2: #52bf90;
+$green-3: #2fb179;
+$gray-1: #969696;
+$gray-2: #c4c4c4;
+$fontColor: #222528;
+$backgroundColor: #f4f6f9;
+$blue: #077cab;
+
+// Por si usas position:relative este te respete el height 100%
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0 !important;
+}
+// App engloba toda la página
+#app {
+    font-family: $font-family-sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    // text-align: center;
+    color: $menuBarColor;
+    // height: $height;
+    width: 100%;
+    position: fixed;
+    top: $top;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    overflow-y: auto;
+    font-size: 0.9rem !important;
+}
+// Oculta el título del suitelet
+.uir-page-title {
+    display: none;
+}
+
+//******************************** Menú***********************************
+.menu {
+    background-color: $menuBarColor;
+    color: $textWhite;
+    transition: width 0.3s;
+    font-family: Arial, Helvetica, sans-serif;
+    // :position: relative;
+    position: absolute;
+    height: 100%;
+    bottom: 0px;
+
+}
+
+.subMenuOpen:hover {
+    border-color: white;
+    background-color: rgb(59, 59, 59);
+    .menuItemHeader {
+        background-color: $menuBarColor;
+        margin-left: 0px;
+    }
+}
+
+
+.header {
+    display: flex;
+    justify-content: center;
+}
+
+.subMenuOpen {
+    margin-bottom: 0px !important;
+    text-decoration: none !important;
+}
+
+.menuItemHeader {
+    padding: 10px;
+    text-align: left;
+    margin-left: 20px;
+    color: #aaa;
+    font-size: 0.85rem !important;
+}
+
+.menu-button {
+    border: none;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    color: $textWhite;
+    padding: 10px;
+}
+
+.collapsed {
+    width: 70px;
+}
+
+.expanded {
+    width: 256px;
+    text-align: center;
+}
+
+.profile {
+    padding: 7px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile img {
+    border-radius: 0%;
+    min-width: 50px;
+    max-width: 140px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.profile-name {
+    padding: 10px 0;
+    font-size: 18px;
+}
+
+.menu-items ul {
+    list-style: none;
+    padding: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
+}
+// Cambia ancho de la pantalla cuando se expande el menú
+div:has(.expanded) {
+    #module-component {
+        width: 100%;
+        height: $height;
+        // display: flex;
+        // position: relative;
+        // flex-direction: column;
+        overflow: auto;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 16rem 1fr;
+        background-color: #f4f6f9;
+
+
+
+    }
+
+    // Estilos pie de página de freebug
+
+    #footer-component {
+        padding: 1rem;
+        background-color: transparent;
+        text-align: center;
+        z-index: 2;
+        grid-column: 2 / 4;
+        grid-row: 3 / 4;
+        transition: width 0.3s;
+        font-size: 14px;
+        color: $blue;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+    }
+
+    // Estilos de Card como componente general
+    .card {
+        // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
+        border: 0px;
+
+        transition: 0.3s;
+        border-radius: 3px;
+        width: $widthContent;
+        // height: 90%;
+        padding: 20px;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        z-index: 1;
+        grid-column: 2 / 4;
+    }
+}
+
+// Cambia ancho de pantalla cuando el menú se minimiza
+div:has(.collapsed) {
+    #module-component {
+        width: 100%;
+        height: $height;
+        overflow: auto;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 5rem 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        background-color: #f4f6f9;
+
+    }
+
+    #footer-component {
+        padding: 1rem;
+        background-color: transparent;
+        text-align: center;
+        z-index: 2;
+        grid-column: 2 / 4;
+        grid-row: 3 / 4;
+        transition: width 0.3s;
+        font-size: 14px;
+        color: $green-2;
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+    }
+
+    // Estilos de Card como componente general
+    .card {
+        box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
+        border: 0px;
+        transition: 0.3s;
+        border-radius: 3px;
+        width: $widthContent;
+        padding: 20px;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        grid-column: 2 / 4;
+    }
+}
+// blue color 
+.blue-text{
+    color:$blue !important;
+}
+// Modal styles
+.modal-dialog{
+    margin-top: 150px !important;
+    border-radius: 1px !important;
+    font-size: 0.9rem !important;
+    button{
+        background-color: $textWhite !important;
+        border: 0px;
+    }
+    .modal-content{
+        border-radius: 3px !important;
+    }
+    .modal-header{
+        color: $blue !important;
+        border-bottom: 0px !important;
+        padding-bottom: 0px !important;
+        .close{
+            color: $gray-1 !important;
+            cursor: pointer !important;
+        }
+    }
+    .modal-body{
+        padding-top: 0px !important;
+    }
+    .headline{
+        background-color: $backgroundColor;
+    }
+    
+    .success-color{
+        color: $green-3 !important;
+    }
+}
+// Form styles for types of input
+.b-form-datepicker,select{
+    border-radius: 3px !important;
+}
+// Title and subtitle styles
+p,h2{
+    text-align: left !important;
+}
+
+.cheto {
+    background-color: $blue;
+    color: $textWhite;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: $blue;
+    padding-left: 10px;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    padding-right: 10px;
+    margin-right: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    white-space: pre-line;
+    word-break: keep-all;
+    word-wrap: normal;
+    display: inline;
+}
+// Estilos de formulario de registro track
+#register_track_form select,
+#register_track_form textarea,
+#register_track_form input{
+    border-radius: 3px !important;
+}
+#register_track_form .submit-button{
+    background-color: $blue !important;
+    color: $textWhite !important;
+    border-radius: 3px !important;
+}
+.text-left{
+    text-align: left !important;
+}
+.error-color{
+    color:#cb2424 !important;
+}
+small{
+    font-size: 0.78rem !important;
+}
