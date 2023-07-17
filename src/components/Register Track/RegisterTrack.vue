@@ -14,7 +14,7 @@
       <b-form id="register_track_form" v-show="!isLoading">
         <!-- first row -->
         <b-row>
-          <b-col class="text-left">
+          <b-col md="3" class="text-left">
             <label class="blue-text" for="shipment-date">Shipment Date</label>
             <b-form-datepicker
               id="datepicker-shipment_date"
@@ -22,9 +22,28 @@
               required
               @input="resetErrorsInput"
             ></b-form-datepicker>
-            <small v-show="error_inputs.shipment_date===true" class="error-color">Enter a valid date</small>
+            <small
+              v-show="error_inputs.shipment_date === true"
+              class="error-color"
+              >Enter a valid date</small
+            >
           </b-col>
-          <b-col class="text-left">
+          <b-col md="4" class="text-left">
+            <label class="blue-text" for="item-ndc">Item NDC</label>
+            <b-form-select
+              id="select_item_ndc"
+              class="form-select"
+              filter
+              v-model="item_ndc_input"
+              :options="options_items_ndc"
+              required
+              @change="resetErrorsInput"
+            ></b-form-select>
+            <small v-show="error_inputs.item_ndc === true" class="error-color"
+              >Select an Item NDC</small
+            >
+          </b-col>
+          <b-col md="5" class="text-left">
             <label class="blue-text" for="lot-number"
               >Associated Lot/Serial number</label
             >
@@ -37,26 +56,37 @@
               required
               @change="resetErrorsInput"
             ></b-form-select>
-            <small v-show="error_inputs.lot_serial_number===true" class="error-color">Select a Lot/serial number</small>
-          </b-col>
-          <b-col class="text-left">
-            <label class="blue-text" for="item-ndc">Item NDC</label>
-            <b-form-select
-              id="select_item_ndc"
-              class="form-select"
-              filter
-              v-model="item_ndc_input"
-              :options="options_items_ndc"
-              required
-              @change="resetErrorsInput"
-            ></b-form-select>
-            <small v-show="error_inputs.item_ndc===true" class="error-color">Select an Item NDC</small>
+            <small
+              v-show="error_inputs.lot_serial_number === true"
+              class="error-color"
+              >Select a Lot/serial number</small
+            >
           </b-col>
         </b-row>
         <!-- Second row -->
         <b-row class="mt-1">
+          <b-col md="3" class="text-left d-flex align-items-center">
+            <b-form-checkbox
+              class="blue-text"
+              id="is_manufactured"
+              v-model="isManufactured_checkBox"
+            >
+              <span class="mx-1">Is manufacturer</span></b-form-checkbox
+            >
+            <small
+              v-show="error_inputs.source_name === true"
+              class="error-color"
+              >Select Source name</small
+            >
+          </b-col>
           <b-col md="4" class="text-left">
-            <label class="blue-text" for="source-name">Source name</label>
+            <label class="blue-text" for="source-name">{{
+              isManufactured_checkBox === null
+                ? "Source name"
+                : isManufactured_checkBox === true
+                ? "Manufacturer source name"
+                : "Vendor source name"
+            }}</label>
             <b-form-select
               id="select_source_name"
               class="form-select"
@@ -64,25 +94,43 @@
               v-model="source_name_input"
               :options="optionsVendorNames"
               required
-              @change="resetErrorsInput"
+              @change="
+                resetErrorsInput();
+                refreshOptions('Source');
+              "
+              :disabled="isManufactured_checkBox === null"
             ></b-form-select>
-            <small v-show="error_inputs.source_name===true" class="error-color">Select Source name</small>
+            <small
+              v-show="error_inputs.source_name === true"
+              class="error-color"
+              >Select Source name</small
+            >
           </b-col>
-          <b-col md="8" class="text-left">
-            <label class="blue-text" for="source-address">Source Address</label>
-            <b-form-input
-              type="text"
+          <b-col md="5" class="text-left">
+            <label class="blue-text" for="source-address">{{
+              isManufactured_checkBox === true
+                ? "Manufacturer source address"
+                : "Vendor source address"
+            }}</label>
+            <b-form-select
               v-model="source_address_input"
+              class="form-select"
               id="source-address"
               required
-              @keydown="resetErrorsInput"
-            ></b-form-input>
-            <small v-show="error_inputs.source_address===true" class="error-color">Field cannot be empty</small>
+              :options="optionsVendorAddress"
+              @change="resetErrorsInput"
+              :disabled="source_name_input === null || source_name_input === ''"
+            ></b-form-select>
+            <small
+              v-show="error_inputs.source_address === true"
+              class="error-color"
+              >Field cannot be empty</small
+            >
           </b-col>
         </b-row>
         <!-- Third row -->
         <b-row class="mt-1">
-          <b-col md="4" class="text-left">
+          <b-col md="3" class="text-left">
             <label class="blue-text" for="destination-name"
               >Destination name</label
             >
@@ -93,22 +141,37 @@
               v-model="destination_name_input"
               :options="optionsVendorNames"
               required
-              @change="resetErrorsInput"
+              @change="
+                resetErrorsInput();
+                refreshOptions('Destination');
+              "
             ></b-form-select>
-            <small v-show="error_inputs.destination_name===true" class="error-color">Select Destination name</small>
+            <small
+              v-show="error_inputs.destination_name === true"
+              class="error-color"
+              >Select Destination name</small
+            >
           </b-col>
-          <b-col md="8" class="text-left">
+          <b-col class="text-left">
             <label class="blue-text" for="destination-address"
               >Destination Address</label
             >
-            <b-form-input
-              type="text"
+            <b-form-select
+              class="form-select"
               v-model="destination_address_input"
               id="destination-address"
               required
-              @keydown="resetErrorsInput"
-            ></b-form-input>
-            <small v-show="error_inputs.destination_address===true" class="error-color">Field cannot be empty</small>
+              :options="optionsVendorAddressDestination"
+              @change="resetErrorsInput"
+              :disabled="
+                destination_name_input === null || destination_name_input === ''
+              "
+            ></b-form-select>
+            <small
+              v-show="error_inputs.destination_address === true"
+              class="error-color"
+              >Field cannot be empty</small
+            >
           </b-col>
         </b-row>
         <!-- Fourth row -->
@@ -122,7 +185,9 @@
               required
               @keydown="resetErrorsInput"
             ></b-form-input>
-            <small v-show="error_inputs.quantity===true" class="error-color">Enter quantity</small>
+            <small v-show="error_inputs.quantity === true" class="error-color"
+              >Enter quantity</small
+            >
           </b-col>
           <b-col class="text-left">
             <label class="blue-text" for="ack-message"
@@ -135,7 +200,11 @@
               max-rows="6"
               @keydown="resetErrorsInput"
             ></b-form-textarea>
-            <small v-show="error_inputs.acknowlegment_msg===true" class="error-color">Field cannot be empty</small>
+            <small
+              v-show="error_inputs.acknowlegment_msg === true"
+              class="error-color"
+              >Field cannot be empty</small
+            >
           </b-col>
         </b-row>
         <b-row class="d-flex justify-content-end">
@@ -193,12 +262,16 @@ export default {
       isLoading: false,
       // Variables for select inputs
       optionsVendorNames: [],
+      vendorNamesAndAddresses: [],
+      optionsVendorAddressDestination: [],
+      optionsVendorAddress: [],
       options_LotSerialNumbers: [],
       options_items_ndc: [],
       // Variables for form
       date_input: "",
       lot_serial_number_input: "",
       item_ndc_input: "",
+      isManufactured_checkBox: false,
       source_name_input: "",
       source_address_input: "",
       destination_name_input: "",
@@ -239,6 +312,33 @@ export default {
     this.getVendorsSearch();
   },
   methods: {
+    refreshOptions(type) {
+      try {
+        if (type === "Destination") {
+          this.optionsVendorAddressDestination = [];
+          this.vendorNamesAndAddresses.forEach((element) => {
+            if (this.destination_name_input === element.name) {
+              this.optionsVendorAddressDestination.push({
+                text: element.address,
+                value: element.address,
+              });
+            }
+          });
+        } else {
+          this.optionsVendorAddress = [];
+          this.vendorNamesAndAddresses.forEach((element) => {
+            if (this.source_name_input === element.name) {
+              this.optionsVendorAddress.push({
+                text: element.address,
+                value: element.address,
+              });
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error occurred in refresOptions for type:" + type, err);
+      }
+    },
     getVendorsSearch() {
       try {
         let self = this;
@@ -278,8 +378,12 @@ export default {
           .then((b) => {
             b.data.forEach((element) => {
               this.optionsVendorNames.push({
-                value: element.entityid,
-                text: element.entityid,
+                value: element.name,
+                text: element.name,
+              });
+              this.vendorNamesAndAddresses.push({
+                name: element.name,
+                address: element.address,
               });
             });
             this.isLoading = false;
@@ -292,20 +396,19 @@ export default {
         console.error("Error occurred in getVendorsSearchResponse", err);
       }
     },
-    resetErrorsInput(){
+    resetErrorsInput() {
       this.error_inputs.shipment_date = false;
       this.error_inputs.lot_serial_number = false;
       this.error_inputs.item_ndc = false;
-      this.error_inputs.source_name=false;
-      this.error_inputs.source_address=false;
-      this.error_inputs.destination_name=false;
-      this.error_inputs.destination_address=false;
-      this.error_inputs.quantity=false;
-      this.error_inputs.acknowlegment_msg=false;
-
+      this.error_inputs.source_name = false;
+      this.error_inputs.source_address = false;
+      this.error_inputs.destination_name = false;
+      this.error_inputs.destination_address = false;
+      this.error_inputs.quantity = false;
+      this.error_inputs.acknowlegment_msg = false;
     },
     handleSubmit() {
-      if (this.date_input.length===0|| this.date_input === null) {
+      if (this.date_input.length === 0 || this.date_input === null) {
         this.error_inputs.shipment_date = true;
       }
       if (this.lot_serial_number_input === "") {
@@ -314,23 +417,23 @@ export default {
       if (this.item_ndc_input === "") {
         this.error_inputs.item_ndc = true;
       }
-      if(this.source_name_input===''){
-        this.error_inputs.source_name=true;
+      if (this.source_name_input === "") {
+        this.error_inputs.source_name = true;
       }
-      if(this.source_address_input===''){
-        this.error_inputs.source_address=true;
+      if (this.source_address_input === "") {
+        this.error_inputs.source_address = true;
       }
-      if(this.destination_name_input===''){
-        this.error_inputs.destination_name=true;
+      if (this.destination_name_input === "") {
+        this.error_inputs.destination_name = true;
       }
-      if(this.destination_address_input===''){
-        this.error_inputs.destination_address=true;
+      if (this.destination_address_input === "") {
+        this.error_inputs.destination_address = true;
       }
-      if(this.quantity_input===''){
-        this.error_inputs.quantity=true;
+      if (this.quantity_input === "") {
+        this.error_inputs.quantity = true;
       }
-      if(this.acknowledgment_msg_input===''){
-        this.error_inputs.acknowlegment_msg=true;
+      if (this.acknowledgment_msg_input === "") {
+        this.error_inputs.acknowlegment_msg = true;
       }
       if (
         this.date_input !== "" &&
@@ -361,40 +464,40 @@ export default {
         console.log("Date no format:", this.date_input);
         console.log("Date with format:", formattedDate);
 
-        let objRequest = {
-          custrecord_tkio_transaction_date: formattedDate,
+        let objRequest ={
+          custrecord_tkio_ack_msg: this.acknowledgment_msg_input,
           custrecord_tkio_source_address: this.source_address_input,
+          custrecord_tkio_transaction_date: formattedDate,
           custrecord_tkio_destination_address: this.destination_address_input,
           custrecord_tkio_assoc_lot_number: this.lot_serial_number_input,
           custrecord_tkio_item_ndc: this.item_ndc_input,
           custrecord_tkio_quantity: this.quantity_input,
           custrecord_tkio_src_name: this.source_name_input,
           custrecord_tkio_destination_name: this.destination_name_input,
-          custrecord_tkio_ack_msg: this.acknowledgment_msg_input,
+          custrecord_tkio_is_manufactured: this.isManufactured_checkBox
         };
         let str_objRequest = JSON.stringify(objRequest);
+        console.log("str_objRequest",str_objRequest);
         let self = this;
         console.log("handleSubmit -self: ", self);
-        let str = `
-        var urlMode=null;
-                require(["N/url"],function(urlMode){
-                    var url=urlMode.resolveScript({
-                        scriptId:'customscript_tkio_wetrackntrace_serv_sl',
-                        deploymentId:"customdeploy_tkio_wetrackntrace_serv_sl",
-                        returnExternalUrl:false,
-                        params:{sendTrack:'${str_objRequest}'}
-                    });
-                    self.getSendTrackRegistryResponse(url)
-                });
-        
-        `;
+        let str = "";
+        (str += "          var urlMode=null;"),
+        (str += 'require(["N/url"],function(urlMode){'),
+        (str += "            var url=urlMode.resolveScript({"),
+        (str +="                scriptId:'customscript_tkio_wetrackntrace_serv_sl',"),
+        (str +="                deploymentId:'customdeploy_tkio_wetrackntrace_serv_sl',"),
+        (str += "                returnExternalUrl:false,"),
+        (str += "                params:{}"),
+        (str += "            });"),
+        (str += "            self.getSendTrackRegistryResponse(url,{sendTrack:true,sendTrackBody: '" + str_objRequest + "'})"),
+        (str += "        });"),
         eval(str);
         console.log("Submit form triggered", objRequest);
       }
     },
-    getSendTrackRegistryResponse(e) {
+    getSendTrackRegistryResponse(e, par = {}) {
       const t = {
-        method: "GET",
+        method: "POST",
         url: e,
         headers: {
           "Content-Type": "application/json",
@@ -402,7 +505,9 @@ export default {
           "Access-Control-Allow-Methods": "GET,PUT,POST,OPTIONS",
           "Access-Control-Allow-Headers": "authorization",
         },
+        data: par
       };
+      console.log({t});
       axios
         .request(t)
         .then((b) => {

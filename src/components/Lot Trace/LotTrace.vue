@@ -86,9 +86,12 @@ export default {
         });
     },
     filterObjData() {
-      let obj_newData = [];
+      try{
+        let obj_newData = [];
       this.obj_data_allTypeRecords = this.obj_data;
+      console.log("obj_data first entrance:",this.obj_data);
       this.obj_data.forEach((element) => {
+        console.log("recordtype:",element.recordtype);
         if (element.recordtype === "itemreceipt") {
           let obj_aux = {};
           let obj_original = {};
@@ -104,12 +107,16 @@ export default {
           // remaining object
           obj_original = element;
           const concatenated = Object.assign({}, obj_aux, obj_original);
-          // console.log(concatenated);
+          console.log(concatenated);
           obj_newData.push(concatenated);
         }
       });
       this.obj_data = obj_newData;
       this.isLoading=false;
+      }catch(err){
+        console.error('Error occurred in filterObjData',err);
+      }
+     
     },
   },
 };

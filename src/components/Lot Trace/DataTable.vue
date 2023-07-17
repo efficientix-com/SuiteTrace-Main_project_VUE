@@ -40,19 +40,18 @@
               filter
             ></b-form-select>
           </div>
-          <div class="col-md-3 col-sm-6">
-            <label class="mr-sm-2" for="select-lot-number"
-              >Lot/Serial number</label
-            >
+          <b-col md="3">
+            <label class="mr-sm-2" for="select-lot-number">NDC</label>
             <b-form-select
               id="select-subsidiary"
               @change="filterDatatable"
               class="form-select"
-              v-model="selectedLotNumber"
-              :options="options_lot_number"
+              v-model="selectedNDC"
+              :options="options_NDC"
               filter
             ></b-form-select>
-          </div>
+          </b-col>
+          
         </div>
         <b-row class="mb-3">
           <b-col md="3">
@@ -77,17 +76,20 @@
               filter
             ></b-form-select>
           </b-col>
-          <b-col md="3">
-            <label class="mr-sm-2" for="select-lot-number">NDC</label>
+          <div class="col-md-3 col-sm-6">
+            <label class="mr-sm-2" for="select-lot-number"
+              >Lot/Serial number</label
+            >
             <b-form-select
               id="select-subsidiary"
               @change="filterDatatable"
               class="form-select"
-              v-model="selectedNDC"
-              :options="options_NDC"
+              v-model="selectedLotNumber"
+              :options="options_lot_number"
               filter
             ></b-form-select>
-          </b-col>
+          </div>
+          
         </b-row>
       </b-collapse>
 
@@ -507,100 +509,96 @@ export default {
     });
   },
   methods: {
-    hasValue(array,value){
-      return array.some(obj=>obj.value===value);
+    hasValue(array, value) {
+      return array.some((obj) => obj.value === value);
     },
     getOptionsFilled() {
-      console.log("Entra");
-      let temp_data = this.data;
-      let subsidiary_arr = [
-        { value: "All", text: "All" }
-      ];
-      let transactionId_arr = [
-      { value: "All", text: "All" }
-      ];
-      let lot_serial_arr=[
-      { value: "All", text: "All" }
-      ];
-      let sender_arr=[
-      { value: "All", text: "All" }
-      ];
-      let location_arr=[
-      { value: "All", text: "All" }
-      ];
-      let ndc_arr=[
-      { value: "All", text: "All" }
-      ];
+      try {
+        console.log("Entra");
+        let temp_data = this.data;
+        let subsidiary_arr = [{ value: "All", text: "All" }];
+        let transactionId_arr = [{ value: "All", text: "All" }];
+        let lot_serial_arr = [{ value: "All", text: "All" }];
+        let sender_arr = [{ value: "All", text: "All" }];
+        let location_arr = [{ value: "All", text: "All" }];
+        let ndc_arr = [{ value: "All", text: "All" }];
 
-      temp_data.forEach((element) => {
-        if (
-          element.subsidiary !== "" &&
-          this.hasValue(subsidiary_arr,element.subsidiary)===false
-        ) {
-          subsidiary_arr.push({
-            value: element.subsidiary,
-            text: element.subsidiary,
-          });
-        }
-        if (
-          element.tranid_createdfrom !== "" &&
-          element.tranid_createdfrom &&
-          this.hasValue(transactionId_arr,element.tranid_createdfrom)===false
-        ) {
-          transactionId_arr.push({
-            value: element.tranid_createdfrom,
-            text: element.tranid_createdfrom,
-          });
-        }
-        if (
-          element.inventorynumber_inventorydetail !== "" &&
-          element.inventorynumber_inventorydetail &&
-          this.hasValue(lot_serial_arr,element.inventorynumber_inventorydetail)===false
-        ) {
-          lot_serial_arr.push({
-            value: element.inventorynumber_inventorydetail,
-            text: element.inventorynumber_inventorydetail,
-          });
-        }
-        if (
-          element.entity !== "" &&
-          element.entity &&
-          this.hasValue(sender_arr,element.entity)===false
-        ) {
-          sender_arr.push({
-            value: element.entity,
-            text: element.entity,
-          });
-        }
-        if (
-          element.location !== "" &&
-          element.location &&
-          this.hasValue(location_arr,element.location)===false
-        ) {
-          location_arr.push({
-            value: element.location,
-            text: element.location,
-          });
-        }
-        if (
-          element.item !== "" &&
-          element.item &&
-          this.hasValue(ndc_arr,element.item)===false
-        ) {
-          ndc_arr.push({
-            value: element.item,
-            text: element.item,
-          });
-        }
-      });
-      this.optionsSubsidiary=subsidiary_arr;
-      this.options_transactionID=transactionId_arr;
-      this.options_lot_number=lot_serial_arr;
-      this.options_Sender=sender_arr;
-      this.options_location=location_arr;
-      this.options_NDC=ndc_arr;
-      this.$store.commit('setLot_serial_numbers',lot_serial_arr);
-      this.$store.commit('setItems_ndc',ndc_arr);
+        temp_data.forEach((element) => {
+          if (
+            element.subsidiary !== "" &&
+            this.hasValue(subsidiary_arr, element.subsidiary) === false
+          ) {
+            subsidiary_arr.push({
+              value: element.subsidiary,
+              text: element.subsidiary,
+            });
+          }
+          if (
+            element.tranid_createdfrom !== "" &&
+            element.tranid_createdfrom &&
+            this.hasValue(transactionId_arr, element.tranid_createdfrom) ===
+              false
+          ) {
+            transactionId_arr.push({
+              value: element.tranid_createdfrom,
+              text: element.tranid_createdfrom,
+            });
+          }
+          if (
+            element.inventorynumber_inventorydetail !== "" &&
+            element.inventorynumber_inventorydetail &&
+            this.hasValue(
+              lot_serial_arr,
+              element.inventorynumber_inventorydetail
+            ) === false
+          ) {
+            lot_serial_arr.push({
+              value: element.inventorynumber_inventorydetail,
+              text: element.inventorynumber_inventorydetail,
+            });
+          }
+          if (
+            element.entity !== "" &&
+            element.entity &&
+            this.hasValue(sender_arr, element.entity) === false
+          ) {
+            sender_arr.push({
+              value: element.entity,
+              text: element.entity,
+            });
+          }
+          if (
+            element.location !== "" &&
+            element.location &&
+            this.hasValue(location_arr, element.location) === false
+          ) {
+            location_arr.push({
+              value: element.location,
+              text: element.location,
+            });
+          }
+          if (
+            element.item !== "" &&
+            element.item &&
+            this.hasValue(ndc_arr, element.item) === false
+          ) {
+            ndc_arr.push({
+              value: element.item,
+              text: element.item,
+            });
+          }
+        });
+        this.optionsSubsidiary = subsidiary_arr;
+        this.options_transactionID = transactionId_arr;
+        this.options_lot_number = lot_serial_arr;
+        this.options_Sender = sender_arr;
+        this.options_location = location_arr;
+        this.options_NDC = ndc_arr;
+        this.$store.commit("setLot_serial_numbers", lot_serial_arr);
+        this.$store.commit("setItems_ndc", ndc_arr);
+      } catch (err) {
+        console.error("Error occurred in getOptionsFilled:", err);
+      }
     },
     showModal() {
       this.$refs["modal_lot_details"].show();
