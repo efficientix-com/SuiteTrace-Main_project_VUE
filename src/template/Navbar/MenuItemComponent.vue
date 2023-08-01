@@ -18,7 +18,7 @@ export default {
 <template>
   <a
     class="subMenuOpen"
-    v-on:click="item1.onClick()"
+    
     @mouseover="subMenuOpen = true"
     @mouseleave="subMenuOpen = false"
   >

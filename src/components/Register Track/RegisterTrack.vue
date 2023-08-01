@@ -309,7 +309,7 @@ export default {
     //   this.$store.state.lot_serial_numbers
     // );
 
-    this.getVendorsSearch();
+    // this.getVendorsSearch();
   },
   methods: {
     refreshOptions(type) {

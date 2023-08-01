@@ -46,17 +46,17 @@ export default {
             hasChildren: false,
         },
         
-        // {
-        //     id: 5,
-        //     header:"Sandbox",
-        //     displayHeader:true,
-        //     title: "EPC Encoder",
-        //     icon: 'fa-screwdriver-wrench',
-        //     path: "#/sb-encoder-epc",
-        //     onClick() {
-        //         console.log("SB encoder");
-        //     },
-        //     hasChildren: false,
-        // }
+        {
+            id: 5,
+            header:"Sandbox",
+            displayHeader:true,
+            title: "EPCIS master",
+            icon: 'fa-screwdriver-wrench',
+            path: "#/epcis-track",
+            onClick() {
+                console.log("SB epcis master");
+            },
+            hasChildren: false,
+        }
     ]
 }
