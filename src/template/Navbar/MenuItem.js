@@ -22,7 +22,7 @@ export default {
         // },
         {
             id: 1,
-            title: "We Track",
+            title: "WeTrack",
             header:"Apps",
             displayHeader:true,
             path: "#/",
@@ -37,9 +37,21 @@ export default {
             id: 2,
             header:"Apps",
             displayHeader:false,
-            title: "Register track",
+            title: "Register Track",
             icon: 'fa-truck-fast',
             path: "#/register-track",
+            onClick() {
+                console.log("Soporte");
+            },
+            hasChildren: false,
+        },
+        {
+            id: 3,
+            header:"Apps",
+            displayHeader:false,
+            title: "WeTrack 3T's",
+            icon: 'fa-truck-fast',
+            path: "#/epcis-dscsa",
             onClick() {
                 console.log("Soporte");
             },
