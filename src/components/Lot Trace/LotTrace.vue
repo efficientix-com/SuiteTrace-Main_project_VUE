@@ -1,5 +1,12 @@
 <template>
-  <div id="module-component">
+  <div id="global">
+    <div class="topNavBarC">
+      <TopNavBar />
+    </div>
+    <div class="sideNavBarC">
+      <SideNavBar />
+    </div>
+    <div class="moduleComponent">
     <MenuComp />
     <div class="card">
       <SpinnerVue v-show="isLoading===true"/>
@@ -12,25 +19,27 @@
         />
     </div>
     <FooterFreebugVue />
+    </div>
   </div>
+  
 </template>
 <script>
 import FooterFreebugVue from "@/template/Commons/FooterFreebug.vue";
-import MenuComp from "../../template/Navbar/MenuComponent.vue";
-import DataTableVue from "./DataTable.vue";
+import SideNavBar from "@/template/SideNavBar.vue";
+import TopNavBar from "@/template/TopNavBar.vue";import DataTableVue from "./DataTable.vue";
 import axios from "axios";
 import { data_test } from "./data_test_trace";
 import SpinnerVue from '@/template/Commons/Spinner.vue';
 
 export default {
   name: "LotTraceComponent",
-  components: { MenuComp, FooterFreebugVue, DataTableVue,SpinnerVue },
+  components: { SideNavBar,TopNavBar, FooterFreebugVue, DataTableVue,SpinnerVue },
   created() {
     // this.isLoading=true;
     this.obj_data = data_test();
     this.filterObjData();
 
-    this.getSearchData();
+    // this.getSearchData();
   },
   data: function () {
     return {

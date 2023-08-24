@@ -1,31 +1,39 @@
 <template>
-  <div id="module-component">
-    <MenuComp></MenuComp>
-    <div class="card">
-      <h3 class="blue-text">EPCIS Master Sandbox</h3>
-      <small
-        >1. Pasar un archivo XML EPCIS y hacer validaciones en Netsuite</small
-      >
-      <hr />
-      <input type="file" @change="uploadFile" />
+  <div id="global">
+    <div class="topNavBarC">
+      <TopNavBar />
     </div>
-    <FooterFreebugComponent />
+    <div class="sideNavBarC">
+      <SideNavBar />
+    </div>
+    <div class="moduleComponent">
+      <div class="card">
+        <h3 class="blue-text">EPCIS Master Sandbox</h3>
+        <small
+          >1. Pasar un archivo XML EPCIS y hacer validaciones en Netsuite</small
+        >
+        <hr />
+        <input type="file" @change="uploadFile" />
+      </div>
+      <FooterFreebugComponent />
+    </div>
   </div>
 </template>
         <script>
-import MenuComp from "@/template/Navbar/MenuComponent.vue";
+import SideNavBar from "@/template/SideNavBar.vue";
+import TopNavBar from "@/template/TopNavBar.vue";
 import FooterFreebugComponent from "@/template/Commons/FooterFreebug.vue";
 import axios from "axios";
 
 export default {
   name: "WeTrackEpcis",
-  components: { MenuComp, FooterFreebugComponent },
+  components: { SideNavBar,TopNavBar, FooterFreebugComponent },
 
   data: function () {
     return {
       fileContent: "",
       startTime: 0,
-      url_to_send_file:''
+      url_to_send_file: "",
     };
   },
   created() {
@@ -50,25 +58,27 @@ export default {
       const file = event.target.files[0];
       console.log("Selected file:", file);
       // Send file to Netsuite. Note: Netsuite validates the extension and file content against schema.
-      
+
       this.sendFile(file);
     },
-    async getExternalURL(){
+    async getExternalURL() {
       try {
         let self = this;
         console.log("handleSubmit -self: ", self);
         let str = "";
         (str += "          var urlMode=null;"),
-        (str += 'require(["N/url"],function(urlMode){'),
-        (str += "            var url=urlMode.resolveScript({"),
-        (str +="                scriptId:'customscript_tkio_wetrack_validatexml_sl',"),
-        (str +="                deploymentId:'customdeploy_tkio_wetrack_validatexml_sl',"),
-        (str += "                returnExternalUrl:false,"),
-        (str += "                params:{}"),
-        (str += "            });"),
-        (str += "            self.getConfigAxios2(url)"),
-        (str += "        });"),
-        eval(str);
+          (str += 'require(["N/url"],function(urlMode){'),
+          (str += "            var url=urlMode.resolveScript({"),
+          (str +=
+            "                scriptId:'customscript_tkio_wetrack_validatexml_sl',"),
+          (str +=
+            "                deploymentId:'customdeploy_tkio_wetrack_validatexml_sl',"),
+          (str += "                returnExternalUrl:false,"),
+          (str += "                params:{}"),
+          (str += "            });"),
+          (str += "            self.getConfigAxios2(url)"),
+          (str += "        });"),
+          eval(str);
       } catch (err) {
         console.error("Error occurred in getExternalURL", err);
       }
@@ -76,7 +86,7 @@ export default {
     async uploadFile(event) {
       try {
         await this.getExternalURL();
-        console.log({event});
+        console.log({ event });
         // Se obtiene el archivo del input
         const file = event.target.files[0];
         // var file_name = file.name;
@@ -107,8 +117,7 @@ export default {
           // Especificación de tratar el body como XML
           script += " var headerObj={'Content-Type':'application/xml'};";
           script += "var response=https.post({";
-          script +=
-            "url:'"+vm.url_to_send_file+"',";
+          script += "url:'" + vm.url_to_send_file + "',";
           // Se dejan esas comillas porque hay saltos de linea en el documento y no las detecta con comillas normales
           script += "body:`" + fileContent + "`,";
           script += "headers:headerObj";
@@ -128,22 +137,24 @@ export default {
         console.log("handleSubmit -self: ", self);
         let str = "";
         (str += "          var urlMode=null;"),
-        (str += 'require(["N/url"],function(urlMode){'),
-        (str += "            var url=urlMode.resolveScript({"),
-        (str +="                scriptId:'customscript_tkio_wetrack_validatexml_sl',"),
-        (str +="                deploymentId:'customdeploy_tkio_wetrack_validatexml_sl',"),
-        (str += "                returnExternalUrl:false,"),
-        (str += "                params:{fileName:'"+filename+"'}"),
-        (str += "            });"),
-        (str += "            self.getConfigAxios2(url)"),
-        (str += "        });"),
-        eval(str);
+          (str += 'require(["N/url"],function(urlMode){'),
+          (str += "            var url=urlMode.resolveScript({"),
+          (str +=
+            "                scriptId:'customscript_tkio_wetrack_validatexml_sl',"),
+          (str +=
+            "                deploymentId:'customdeploy_tkio_wetrack_validatexml_sl',"),
+          (str += "                returnExternalUrl:false,"),
+          (str += "                params:{fileName:'" + filename + "'}"),
+          (str += "            });"),
+          (str += "            self.getConfigAxios2(url)"),
+          (str += "        });"),
+          eval(str);
       } catch (err) {
         console.error("Error occurred in sendFileName", err);
       }
     },
     getConfigAxios2(url) {
-      this.url_to_send_file=url;
+      this.url_to_send_file = url;
       const t = {
         method: "GET",
         url: url,

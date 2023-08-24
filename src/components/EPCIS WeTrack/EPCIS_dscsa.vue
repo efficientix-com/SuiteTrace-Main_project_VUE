@@ -1,23 +1,31 @@
 <template>
-  <div id="module-component">
-    <MenuComp />
-    <div class="card">
-      <h2 class="blue-text">WeTrack 3T's</h2>
-      <p style="font-style: italic">Get information per EPCIS Upload</p>
-      <DataTable_EPCISVue :data="obj_data" />
+  <div id="global">
+    <div class="topNavBarC">
+      <TopNavBar />
     </div>
-    <FooterFreebugVue />
+    <div class="sideNavBarC">
+      <SideNavBar />
+    </div>
+    <div class="moduleComponent">
+      <div class="card">
+        <h2 class="blue-text">WeTrack 3T's</h2>
+        <p style="font-style: italic">Get information per EPCIS Upload</p>
+        <DataTable_EPCISVue :data="obj_data" />
+      </div>
+      <FooterFreebugVue />
+    </div>
   </div>
 </template>
 <script>
+import SideNavBar from "@/template/SideNavBar.vue";
+import TopNavBar from "@/template/TopNavBar.vue";
 import FooterFreebugVue from "@/template/Commons/FooterFreebug.vue";
-import MenuComp from "../../template/Navbar/MenuComponent.vue";
 import DataTable_EPCISVue from "./DataTable_EPCIS.vue";
 // import { data_test_summary } from "./data_test_summary";
 import axios from "axios";
 export default {
   name: "EPCIS_dscsa",
-  components: { MenuComp, FooterFreebugVue, DataTable_EPCISVue },
+  components: { SideNavBar, TopNavBar, FooterFreebugVue, DataTable_EPCISVue },
   data: function () {
     return {
       obj_data: [],
@@ -29,8 +37,8 @@ export default {
     this.getEPCISData();
   },
   methods: {
-    getEPCISData(){
-        try {
+    getEPCISData() {
+      try {
         let self = this;
         console.log("getEPCISData -self:", self);
         let str = `
@@ -66,7 +74,7 @@ export default {
         .request(t)
         .then((b) => {
           console.log("RESP full search: ", b.data);
-          this.obj_data=b.data;
+          this.obj_data = b.data;
           console.log("OBJ_DATA getEPCISData:", this.obj_data);
         })
         .catch((err) => {

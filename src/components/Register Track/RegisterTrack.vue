@@ -1,261 +1,276 @@
 <template>
-  <div id="module-component">
-    <MenuComp />
-
-    <div class="card">
-      <SpinnerVue v-show="isLoading === true" />
-
-      <!-- Heading -->
-      <h2 v-show="!isLoading" class="blue-text">Register Track</h2>
-      <p v-show="!isLoading" style="font-style: italic">
-        Fill out the form to register the track from an item
-      </p>
-      <!-- Form content -->
-      <b-form id="register_track_form" v-show="!isLoading">
-        <!-- first row -->
-        <b-row>
-          <b-col md="3" class="text-left">
-            <label class="blue-text" for="shipment-date">Shipment Date</label>
-            <b-form-datepicker
-              id="datepicker-shipment_date"
-              v-model="date_input"
-              required
-              @input="resetErrorsInput"
-            ></b-form-datepicker>
-            <small
-              v-show="error_inputs.shipment_date === true"
-              class="error-color"
-              >Enter a valid date</small
-            >
-          </b-col>
-          <b-col md="4" class="text-left">
-            <label class="blue-text" for="item-ndc">Item NDC</label>
-            <b-form-select
-              id="select_item_ndc"
-              class="form-select"
-              filter
-              v-model="item_ndc_input"
-              :options="options_items_ndc"
-              required
-              @change="resetErrorsInput"
-            ></b-form-select>
-            <small v-show="error_inputs.item_ndc === true" class="error-color"
-              >Select an Item NDC</small
-            >
-          </b-col>
-          <b-col md="5" class="text-left">
-            <label class="blue-text" for="lot-number"
-              >Associated Lot/Serial number</label
-            >
-            <b-form-select
-              id="select_lot_serial_number_associated"
-              class="form-select"
-              filter
-              v-model="lot_serial_number_input"
-              :options="options_LotSerialNumbers"
-              required
-              @change="resetErrorsInput"
-            ></b-form-select>
-            <small
-              v-show="error_inputs.lot_serial_number === true"
-              class="error-color"
-              >Select a Lot/serial number</small
-            >
-          </b-col>
-        </b-row>
-        <!-- Second row -->
-        <b-row class="mt-1">
-          <b-col md="3" class="text-left d-flex align-items-center">
-            <b-form-checkbox
-              class="blue-text"
-              id="is_manufactured"
-              v-model="isManufactured_checkBox"
-            >
-              <span class="mx-1">Is manufacturer</span></b-form-checkbox
-            >
-            <small
-              v-show="error_inputs.source_name === true"
-              class="error-color"
-              >Select Source name</small
-            >
-          </b-col>
-          <b-col md="4" class="text-left">
-            <label class="blue-text" for="source-name">{{
-              isManufactured_checkBox === null
-                ? "Source name"
-                : isManufactured_checkBox === true
-                ? "Manufacturer source name"
-                : "Vendor source name"
-            }}</label>
-            <b-form-select
-              id="select_source_name"
-              class="form-select"
-              filter
-              v-model="source_name_input"
-              :options="optionsVendorNames"
-              required
-              @change="
-                resetErrorsInput();
-                refreshOptions('Source');
-              "
-              :disabled="isManufactured_checkBox === null"
-            ></b-form-select>
-            <small
-              v-show="error_inputs.source_name === true"
-              class="error-color"
-              >Select Source name</small
-            >
-          </b-col>
-          <b-col md="5" class="text-left">
-            <label class="blue-text" for="source-address">{{
-              isManufactured_checkBox === true
-                ? "Manufacturer source address"
-                : "Vendor source address"
-            }}</label>
-            <b-form-select
-              v-model="source_address_input"
-              class="form-select"
-              id="source-address"
-              required
-              :options="optionsVendorAddress"
-              @change="resetErrorsInput"
-              :disabled="source_name_input === null || source_name_input === ''"
-            ></b-form-select>
-            <small
-              v-show="error_inputs.source_address === true"
-              class="error-color"
-              >Field cannot be empty</small
-            >
-          </b-col>
-        </b-row>
-        <!-- Third row -->
-        <b-row class="mt-1">
-          <b-col md="3" class="text-left">
-            <label class="blue-text" for="destination-name"
-              >Destination name</label
-            >
-            <b-form-select
-              id="select_destination_name"
-              class="form-select"
-              filter
-              v-model="destination_name_input"
-              :options="optionsVendorNames"
-              required
-              @change="
-                resetErrorsInput();
-                refreshOptions('Destination');
-              "
-            ></b-form-select>
-            <small
-              v-show="error_inputs.destination_name === true"
-              class="error-color"
-              >Select Destination name</small
-            >
-          </b-col>
-          <b-col class="text-left">
-            <label class="blue-text" for="destination-address"
-              >Destination Address</label
-            >
-            <b-form-select
-              class="form-select"
-              v-model="destination_address_input"
-              id="destination-address"
-              required
-              :options="optionsVendorAddressDestination"
-              @change="resetErrorsInput"
-              :disabled="
-                destination_name_input === null || destination_name_input === ''
-              "
-            ></b-form-select>
-            <small
-              v-show="error_inputs.destination_address === true"
-              class="error-color"
-              >Field cannot be empty</small
-            >
-          </b-col>
-        </b-row>
-        <!-- Fourth row -->
-        <b-row class="mt-1">
-          <b-col md="4" class="text-left">
-            <label class="blue-text" for="quantity">Quantity</label>
-            <b-form-input
-              type="number"
-              v-model="quantity_input"
-              id="quantity"
-              required
-              @keydown="resetErrorsInput"
-            ></b-form-input>
-            <small v-show="error_inputs.quantity === true" class="error-color"
-              >Enter quantity</small
-            >
-          </b-col>
-          <b-col class="text-left">
-            <label class="blue-text" for="ack-message"
-              >Acknowledgment Message</label
-            >
-            <b-form-textarea
-              id="textarea"
-              v-model="acknowledgment_msg_input"
-              rows="3"
-              max-rows="6"
-              @keydown="resetErrorsInput"
-            ></b-form-textarea>
-            <small
-              v-show="error_inputs.acknowlegment_msg === true"
-              class="error-color"
-              >Field cannot be empty</small
-            >
-          </b-col>
-        </b-row>
-        <b-row class="d-flex justify-content-end">
-          <b-col md="1" style="margin-right: 20px !important">
-            <div class="mt-3 btn submit-button" @click="handleSubmit">
-              Submit
-            </div>
-          </b-col>
-        </b-row>
-      </b-form>
-      <b-modal id="bv-modal-example" hide-footer v-model="showToast" size="xs">
-        <template #modal-header="{ close }">
-          <div size="sm" class="close" @click="close()">
-            <font-awesome-icon icon="fa-solid fa-x" size="1x" />
-          </div>
-        </template>
-        <div class="d-block text-center">
-          <font-awesome-icon
-            v-show="hasError === false"
-            :class="
-              hasError === true ? 'error-color mb-3' : 'success-color mb-3'
-            "
-            icon="fa-solid fa-check"
-            size="3x"
-          />
-          <font-awesome-icon
-            v-show="hasError === true"
-            :class="
-              hasError === true ? 'error-color mb-3' : 'success-color mb-3'
-            "
-            icon="fa-solid fa-circle-exclamation"
-            size="3x"
-          />
-          <h4 :class="hasError === true ? 'error-color' : 'success-color'">
-            {{ msgToast }}
-          </h4>
-        </div>
-      </b-modal>
+  <div id="global">
+    <div class="topNavBarC">
+      <TopNavBar />
     </div>
-    <FooterFreebugVue />
+    <div class="sideNavBarC">
+      <SideNavBar />
+    </div>
+    <div class="moduleComponent">
+      <div class="card">
+        <SpinnerVue v-show="isLoading === true" />
+
+        <!-- Heading -->
+        <h2 v-show="!isLoading" class="blue-text">Register Track</h2>
+        <p v-show="!isLoading" style="font-style: italic">
+          Fill out the form to register the track from an item
+        </p>
+        <!-- Form content -->
+        <b-form id="register_track_form" v-show="!isLoading">
+          <!-- first row -->
+          <b-row>
+            <b-col md="3" class="text-left">
+              <label class="blue-text" for="shipment-date">Shipment Date</label>
+              <b-form-datepicker
+                id="datepicker-shipment_date"
+                v-model="date_input"
+                required
+                @input="resetErrorsInput"
+              ></b-form-datepicker>
+              <small
+                v-show="error_inputs.shipment_date === true"
+                class="error-color"
+                >Enter a valid date</small
+              >
+            </b-col>
+            <b-col md="4" class="text-left">
+              <label class="blue-text" for="item-ndc">Item NDC</label>
+              <b-form-select
+                id="select_item_ndc"
+                class="form-select"
+                filter
+                v-model="item_ndc_input"
+                :options="options_items_ndc"
+                required
+                @change="resetErrorsInput"
+              ></b-form-select>
+              <small v-show="error_inputs.item_ndc === true" class="error-color"
+                >Select an Item NDC</small
+              >
+            </b-col>
+            <b-col md="5" class="text-left">
+              <label class="blue-text" for="lot-number"
+                >Associated Lot/Serial number</label
+              >
+              <b-form-select
+                id="select_lot_serial_number_associated"
+                class="form-select"
+                filter
+                v-model="lot_serial_number_input"
+                :options="options_LotSerialNumbers"
+                required
+                @change="resetErrorsInput"
+              ></b-form-select>
+              <small
+                v-show="error_inputs.lot_serial_number === true"
+                class="error-color"
+                >Select a Lot/serial number</small
+              >
+            </b-col>
+          </b-row>
+          <!-- Second row -->
+          <b-row class="mt-1">
+            <b-col md="3" class="text-left d-flex align-items-center">
+              <b-form-checkbox
+                class="blue-text"
+                id="is_manufactured"
+                v-model="isManufactured_checkBox"
+              >
+                <span class="mx-1">Is manufacturer</span></b-form-checkbox
+              >
+              <small
+                v-show="error_inputs.source_name === true"
+                class="error-color"
+                >Select Source name</small
+              >
+            </b-col>
+            <b-col md="4" class="text-left">
+              <label class="blue-text" for="source-name">{{
+                isManufactured_checkBox === null
+                  ? "Source name"
+                  : isManufactured_checkBox === true
+                  ? "Manufacturer source name"
+                  : "Vendor source name"
+              }}</label>
+              <b-form-select
+                id="select_source_name"
+                class="form-select"
+                filter
+                v-model="source_name_input"
+                :options="optionsVendorNames"
+                required
+                @change="
+                  resetErrorsInput();
+                  refreshOptions('Source');
+                "
+                :disabled="isManufactured_checkBox === null"
+              ></b-form-select>
+              <small
+                v-show="error_inputs.source_name === true"
+                class="error-color"
+                >Select Source name</small
+              >
+            </b-col>
+            <b-col md="5" class="text-left">
+              <label class="blue-text" for="source-address">{{
+                isManufactured_checkBox === true
+                  ? "Manufacturer source address"
+                  : "Vendor source address"
+              }}</label>
+              <b-form-select
+                v-model="source_address_input"
+                class="form-select"
+                id="source-address"
+                required
+                :options="optionsVendorAddress"
+                @change="resetErrorsInput"
+                :disabled="
+                  source_name_input === null || source_name_input === ''
+                "
+              ></b-form-select>
+              <small
+                v-show="error_inputs.source_address === true"
+                class="error-color"
+                >Field cannot be empty</small
+              >
+            </b-col>
+          </b-row>
+          <!-- Third row -->
+          <b-row class="mt-1">
+            <b-col md="3" class="text-left">
+              <label class="blue-text" for="destination-name"
+                >Destination name</label
+              >
+              <b-form-select
+                id="select_destination_name"
+                class="form-select"
+                filter
+                v-model="destination_name_input"
+                :options="optionsVendorNames"
+                required
+                @change="
+                  resetErrorsInput();
+                  refreshOptions('Destination');
+                "
+              ></b-form-select>
+              <small
+                v-show="error_inputs.destination_name === true"
+                class="error-color"
+                >Select Destination name</small
+              >
+            </b-col>
+            <b-col class="text-left">
+              <label class="blue-text" for="destination-address"
+                >Destination Address</label
+              >
+              <b-form-select
+                class="form-select"
+                v-model="destination_address_input"
+                id="destination-address"
+                required
+                :options="optionsVendorAddressDestination"
+                @change="resetErrorsInput"
+                :disabled="
+                  destination_name_input === null ||
+                  destination_name_input === ''
+                "
+              ></b-form-select>
+              <small
+                v-show="error_inputs.destination_address === true"
+                class="error-color"
+                >Field cannot be empty</small
+              >
+            </b-col>
+          </b-row>
+          <!-- Fourth row -->
+          <b-row class="mt-1">
+            <b-col md="4" class="text-left">
+              <label class="blue-text" for="quantity">Quantity</label>
+              <b-form-input
+                type="number"
+                v-model="quantity_input"
+                id="quantity"
+                required
+                @keydown="resetErrorsInput"
+              ></b-form-input>
+              <small v-show="error_inputs.quantity === true" class="error-color"
+                >Enter quantity</small
+              >
+            </b-col>
+            <b-col class="text-left">
+              <label class="blue-text" for="ack-message"
+                >Acknowledgment Message</label
+              >
+              <b-form-textarea
+                id="textarea"
+                v-model="acknowledgment_msg_input"
+                rows="3"
+                max-rows="6"
+                @keydown="resetErrorsInput"
+              ></b-form-textarea>
+              <small
+                v-show="error_inputs.acknowlegment_msg === true"
+                class="error-color"
+                >Field cannot be empty</small
+              >
+            </b-col>
+          </b-row>
+          <b-row class="d-flex justify-content-end">
+            <b-col md="1" style="margin-right: 20px !important">
+              <div class="mt-3 btn submit-button" @click="handleSubmit">
+                Submit
+              </div>
+            </b-col>
+          </b-row>
+        </b-form>
+        <b-modal
+          id="bv-modal-example"
+          hide-footer
+          v-model="showToast"
+          size="xs"
+        >
+          <template #modal-header="{ close }">
+            <div size="sm" class="close" @click="close()">
+              <font-awesome-icon icon="fa-solid fa-x" size="1x" />
+            </div>
+          </template>
+          <div class="d-block text-center">
+            <font-awesome-icon
+              v-show="hasError === false"
+              :class="
+                hasError === true ? 'error-color mb-3' : 'success-color mb-3'
+              "
+              icon="fa-solid fa-check"
+              size="3x"
+            />
+            <font-awesome-icon
+              v-show="hasError === true"
+              :class="
+                hasError === true ? 'error-color mb-3' : 'success-color mb-3'
+              "
+              icon="fa-solid fa-circle-exclamation"
+              size="3x"
+            />
+            <h4 :class="hasError === true ? 'error-color' : 'success-color'">
+              {{ msgToast }}
+            </h4>
+          </div>
+        </b-modal>
+      </div>
+      <FooterFreebugVue />
+    </div>
   </div>
 </template>
 <script>
+import SideNavBar from "@/template/SideNavBar.vue";
+import TopNavBar from "@/template/TopNavBar.vue";
 import FooterFreebugVue from "@/template/Commons/FooterFreebug.vue";
-import MenuComp from "../../template/Navbar/MenuComponent.vue";
 import axios from "axios";
 import SpinnerVue from "@/template/Commons/Spinner.vue";
 
 export default {
   name: "RegisterTrack",
-  components: { MenuComp, FooterFreebugVue, SpinnerVue },
+  components: { SideNavBar,TopNavBar, FooterFreebugVue, SpinnerVue },
   data: function () {
     return {
       // Variables for shwoing other components
@@ -464,7 +479,7 @@ export default {
         console.log("Date no format:", this.date_input);
         console.log("Date with format:", formattedDate);
 
-        let objRequest ={
+        let objRequest = {
           custrecord_tkio_ack_msg: this.acknowledgment_msg_input,
           custrecord_tkio_source_address: this.source_address_input,
           custrecord_tkio_transaction_date: formattedDate,
@@ -474,24 +489,29 @@ export default {
           custrecord_tkio_quantity: this.quantity_input,
           custrecord_tkio_src_name: this.source_name_input,
           custrecord_tkio_destination_name: this.destination_name_input,
-          custrecord_tkio_is_manufactured: this.isManufactured_checkBox
+          custrecord_tkio_is_manufactured: this.isManufactured_checkBox,
         };
         let str_objRequest = JSON.stringify(objRequest);
-        console.log("str_objRequest",str_objRequest);
+        console.log("str_objRequest", str_objRequest);
         let self = this;
         console.log("handleSubmit -self: ", self);
         let str = "";
         (str += "          var urlMode=null;"),
-        (str += 'require(["N/url"],function(urlMode){'),
-        (str += "            var url=urlMode.resolveScript({"),
-        (str +="                scriptId:'customscript_tkio_wetrackntrace_serv_sl',"),
-        (str +="                deploymentId:'customdeploy_tkio_wetrackntrace_serv_sl',"),
-        (str += "                returnExternalUrl:false,"),
-        (str += "                params:{}"),
-        (str += "            });"),
-        (str += "            self.getSendTrackRegistryResponse(url,{sendTrack:true,sendTrackBody: '" + str_objRequest + "'})"),
-        (str += "        });"),
-        eval(str);
+          (str += 'require(["N/url"],function(urlMode){'),
+          (str += "            var url=urlMode.resolveScript({"),
+          (str +=
+            "                scriptId:'customscript_tkio_wetrackntrace_serv_sl',"),
+          (str +=
+            "                deploymentId:'customdeploy_tkio_wetrackntrace_serv_sl',"),
+          (str += "                returnExternalUrl:false,"),
+          (str += "                params:{}"),
+          (str += "            });"),
+          (str +=
+            "            self.getSendTrackRegistryResponse(url,{sendTrack:true,sendTrackBody: '" +
+            str_objRequest +
+            "'})"),
+          (str += "        });"),
+          eval(str);
         console.log("Submit form triggered", objRequest);
       }
     },
@@ -505,9 +525,9 @@ export default {
           "Access-Control-Allow-Methods": "GET,PUT,POST,OPTIONS",
           "Access-Control-Allow-Headers": "authorization",
         },
-        data: par
+        data: par,
       };
-      console.log({t});
+      console.log({ t });
       axios
         .request(t)
         .then((b) => {
