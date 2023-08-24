@@ -57,6 +57,16 @@ export default {
             },
             hasChildren: false,
         },
+        {
+            id: 4,
+            header:"Apps",
+            displayHeader:false,
+            title: "SuiteTrace Report",
+            icon: 'fa-truck-fast',
+            path: "#/suitetrace-reports",
+            
+            hasChildren: false,
+        },
         
         {
             id: 5,
