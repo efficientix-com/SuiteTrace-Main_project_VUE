@@ -7,7 +7,6 @@
       <SideNavBar />
     </div>
     <div class="moduleComponent">
-    <MenuComp />
     <div class="card">
       <SpinnerVue v-show="isLoading===true"/>
 

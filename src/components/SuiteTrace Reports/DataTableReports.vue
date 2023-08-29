@@ -482,7 +482,7 @@
           <div class="row mt-2">
             <div
               class="col text-center"
-              v-if="dataHist.recordtype === 'Item Receipt'"
+              v-if="dataHist.recordtype === 'Item Receipt' || dataHist.recordtype === 'Item Fulfillment'"
             >
               <strong
                 >{{ dataHist.sender_name }}
@@ -514,7 +514,7 @@
                   ? "Receipt"
                   : dataHist.recordtype === "inventoryadjustment"
                   ? "Inventory Adjustment"
-                  : dataHist.recordtype === "itemfulfillment"
+                  : dataHist.recordtype === "Item Fulfillment"
                   ? "Item fulfillment"
                   : ""
               }}
@@ -542,7 +542,7 @@
               <p class="mt-0">{{ dataHist.delivery_number }}</p>
             </div>
           </div>
-          <div class="row" v-else-if="dataHist.recordtype === 'Item Receipt'">
+          <div class="row" v-else-if="dataHist.recordtype === 'Item Receipt' || dataHist.recordtype === 'Item Fulfillment'">
             <div class="col">
               <p class="mb-0 blue-text">From business</p>
               <p class="mt-0">{{ dataHist.sender_location_address }}</p>

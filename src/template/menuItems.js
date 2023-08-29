@@ -23,6 +23,13 @@ const menuItems = () => {
             icon: 'fa-solid fa-file',
             hasChildren: false
         },
+        {
+            id: 5,
+            title: 'SuiteTrace QR Scan',
+            path: '#/qr-aggregation',
+            icon: 'fa-solid fa-qrcode',
+            hasChildren: false
+        },
 
         
 

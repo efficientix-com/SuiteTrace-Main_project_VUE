@@ -1,0 +1,211 @@
+@import './styles.scss';
+
+
+// Variables for stepper styles
+$gray-2:#c0c2ce;
+$gray-1:#e5e6eb;
+$stepper-bar-background:	#0259C2;
+$black-1:#1a1a1a;
+$green-1:#0259C2;
+$transition:0.5s;
+
+// ClassNames styles
+.wrapper-stepper{
+    // padding: 40px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-radius: 32px;
+    // margin: auto;
+    margin-bottom:20px;
+    width: 100%;
+    height: 100%;
+    transition: width 0.5s;
+    // aspect-ratio: 100 / 25;
+
+    
+}
+.stepper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 860px;
+    position:relative;
+    z-index: 0;
+    margin-bottom: 24px;
+    margin: auto;
+    &-progress{
+        position: absolute;
+        background-color: $gray-1;
+        height: 2px;
+        z-index: -1;
+        left: 9px;
+        right: 2px;
+        margin:0 auto;
+
+        &-bar{
+            position: absolute;
+            left: 0;
+            height: 100%;
+            width: 65%;
+            background-color: $stepper-bar-background;
+            transition:$transition;
+        }
+    }
+}
+.stepper-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $gray-2;
+    transition: $transition;
+
+    &-counter{
+        height: 35px;
+        width: 35px;
+        display: grid;
+        place-items: center;
+        background-color: 	$gray-1;
+        border-radius: 100%;
+        border: 2px solid $gray-1;
+        position: relative;
+
+        .icon-success{
+            position: absolute;
+            opacity: 0;
+            transform: scale(0);
+            width: 24px;
+            transition: $transition;
+        }
+
+        .number{
+            font-size: 17px;
+            transition: $transition;
+            position: absolute;
+            bottom: 2px;
+        }
+    }
+    &-title{
+        position: absolute;
+        font-size: 14px;
+        bottom: -40px;
+        color: $gray-2;
+    }
+}
+@media (max-width: 600px) {
+    .stepper-item-title{
+      display: none; /* Hide on screens with width 600px or less */
+    }
+  }
+.stepper-item.success{
+    .stepper-item-counter{
+        border-color: $stepper-bar-background;
+        background-color: #52bf90;
+        color: #fff;
+        font-weight: 600;
+
+        .icon-success{
+            opacity: 1;
+            transform: scale(1.9);
+        }
+
+        .number{
+            opacity: 0;
+            transform: scale(0);
+        }
+    }
+
+    .stepper-item-title{
+        color:$stepper-bar-background;
+        font-size: 16px;
+        font-weight: 400;
+    }
+}
+.stepper-item.current{
+    .stepper-item-counter{
+        border-color: $stepper-bar-background;
+        background-color: $stepper-bar-background;
+        color:#fff;
+        font-weight: 600;
+    }
+    .stepper-item-title{
+        color:$green-1;
+        font-size: 16px;
+        font-weight: 500;
+    }
+}
+.stepper-item-title{
+    font-size: 16px;
+    font-weight: 400;
+}
+.stepper-pane{
+    color: #333;
+    // text-align: center;
+    margin-top: 30px;
+    // aspect-ratio: 100 / 25;
+
+}
+
+// Estilos de botones
+.controls{
+    display: flex;
+    margin-top: 30px;
+    justify-content: end;
+    align-items: flex-end;
+}
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 16px;
+    border: 1px solid;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    line-height: 1.5;
+    transition: all 150ms;
+    border-radius: 4px;
+    width: fit-content;
+    font-size: 0.85rem; 
+    color:$black-1;
+    background-color: $gray-2;
+    border-color: $gray-2;
+
+    &:disabled{
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    &--green-1{
+        background-color: $stepper-bar-background;
+        border-color: $stepper-bar-background;
+        color: #fff;
+        margin-left: auto;
+    }
+    &--yellow-1{
+        background-color: #fbd950;
+        border-color: #fbd950;
+    }
+    &--gray-1{
+        background-color: transparent;
+        border-color: transparent;
+        &:hover{
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            color: $green-1;
+        }
+    }
+}
+.btn-back{
+    height: 20px;
+}
+.green-btn{
+    background-color: #52bf90;
+    border-color: #52bf90;
+    &:active,
+    &:focus{
+        background-color: #45a57c;
+    border-color: #45a57c;
+    }
+}
+.gray-button{
+    background-color: #c0c2ce;
+    border-color: #c0c2ce;
+}
