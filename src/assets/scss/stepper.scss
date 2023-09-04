@@ -153,43 +153,43 @@ $transition:0.5s;
     align-items: flex-end;
 }
 .btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 6px 16px;
-    border: 1px solid;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    line-height: 1.5;
-    transition: all 150ms;
-    border-radius: 4px;
-    width: fit-content;
-    font-size: 0.85rem; 
-    color:$black-1;
-    background-color: $gray-2;
-    border-color: $gray-2;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 6px 16px !important;
+    border: 1px solid !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    line-height: 1.5 !important;
+    transition: all 150ms !important;
+    border-radius: 4px !important;
+    width: fit-content !important;
+    font-size: 0.85rem !important;
+    color:$black-1 !important;
+    background-color: $gray-2 !important;
+    border-color: $gray-2 !important;
 
     &:disabled{
-        opacity: 0.5;
-        pointer-events: none;
+        opacity: 0.5 !important;
+        pointer-events: none !important;
     }
     &--green-1{
-        background-color: $stepper-bar-background;
-        border-color: $stepper-bar-background;
-        color: #fff;
-        margin-left: auto;
+        background-color: $stepper-bar-background !important;
+        border-color: $stepper-bar-background !important;
+        color: #fff !important;
+        margin-left: auto !important;
     }
     &--yellow-1{
-        background-color: #fbd950;
-        border-color: #fbd950;
+        background-color: #fbd950 !important;
+        border-color: #fbd950 !important;
     }
     &--gray-1{
-        background-color: transparent;
-        border-color: transparent;
+        background-color: transparent !important;
+        border-color: transparent !important;
         &:hover{
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-            color: $green-1;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+            color: $green-1 !important;
         }
     }
 }

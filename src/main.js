@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import {
   faUserSecret, faBars, faFire, faHomeUser, faScrewdriverWrench, faCircleExclamation, faGears, faUserGraduate, faTruckField, faRectangleXmark, faCircleChevronDown, faCircleXmark, faCircleCheck, faHome,
-  faCartFlatbed,faQrcode, faEllipsisVertical,faX, faArrowRight, faFilter, faTruckFast, faCheck, faCaretRight, faFile, faVideoSlash, faCamera
+  faCartFlatbed,faQrcode, faEllipsisVertical,faX, faArrowRight, faFilter, faTruckFast, faCheck, faCaretRight, faFile, faVideoSlash, faCamera, faBarcode
 } from '@fortawesome/free-solid-svg-icons'
 import { faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
 /* add icons to the library */
@@ -46,6 +46,7 @@ library.add(faFile);
 library.add(faQrcode);
 library.add(faVideoSlash);
 library.add(faCamera);
+library.add(faBarcode);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
