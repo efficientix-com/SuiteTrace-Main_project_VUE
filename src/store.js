@@ -9,10 +9,15 @@ const store = new Vuex.Store({
     items_ndc: [{}],
     toggleSideBar: true,
 
+    // user_data: {
+    //   user_name: 'John Doe',
+    //   role: 'Administrator',
+    //   image_url: 'https://firebasestorage.googleapis.com/v0/b/bloona-55051.appspot.com/o/alexander-hipp-iEEBWgY_6lA-unsplash.jpg?alt=media&token=00f5cae5-004a-49e6-a3bb-bda977ee0121'
+    // },
     user_data: {
-      user_name: 'John Doe',
-      role: 'Administrator',
-      image_url: 'https://firebasestorage.googleapis.com/v0/b/bloona-55051.appspot.com/o/alexander-hipp-iEEBWgY_6lA-unsplash.jpg?alt=media&token=00f5cae5-004a-49e6-a3bb-bda977ee0121'
+      user_name: '',
+      role: '',
+      image_url: ''
     },
     lists:[]
     // lists: [
