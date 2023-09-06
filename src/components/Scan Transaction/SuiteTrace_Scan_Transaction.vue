@@ -52,6 +52,9 @@
                     </tr>
                 </table>
             </div>
+            <div class="card" v-else>
+                <h2 class="noLoadPage">No transaction to load was detected, please try again</h2>
+            </div>
             <FooterFreebug />
         </div>
   </div>
@@ -102,7 +105,9 @@ export default {
     mounted (){
         let paramsUrl = this.$route.query;
         this.searchTransaction(paramsUrl);
-        this.$refs.ref_barcode.focus();
+        if(this.obj_data.length>0){
+            this.$refs.ref_barcode.focus();
+        }
     },
     methods: {
         searchTransaction (paramsUrl){
