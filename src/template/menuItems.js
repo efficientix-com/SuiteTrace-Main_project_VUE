@@ -30,13 +30,14 @@ const menuItems = () => {
         //     icon: 'fa-solid fa-qrcode',
         //     hasChildren: false
         // },
-        {
-            id: 6,
-            title: 'SuiteTrace Scan',
-            path: '#/scan-transaction',
-            icon: 'fa-solid fa-barcode',
-            hasChildren: false
-        },
+        // URL de scan-transaction http://localhost:8080/#/scan-transaction
+        // {
+        //     id: 6,
+        //     title: 'SuiteTrace Scan',
+        //     path: '#/scan-transaction',
+        //     icon: 'fa-solid fa-barcode',
+        //     hasChildren: false
+        // },
         
 
     ];
