@@ -146,6 +146,17 @@ small{
     grid-template-rows: 4rem 100%;
 }
 
+.messageError{
+    color: red !important;
+}
+
+.groupLine{
+    display: flex;
+    // margin-top: 30px;
+    // justify-content: end;
+    // align-items: flex-end;
+}
+
 .topNavBarC {
     display: grid !important;
     background-color: $topNavColor !important;
