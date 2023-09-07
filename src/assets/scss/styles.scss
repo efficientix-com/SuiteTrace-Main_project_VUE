@@ -18,6 +18,11 @@ $fontColor: #222528;
 $backgroundColor: #f4f6f9;
 $blue: #077cab;
 $topNavColor: #0259C2;
+// Variables for stepper styles
+$stepper-bar-background:	#0259C2;
+$black-1:#1a1a1a;
+$green-1:#0259C2;
+$transition:0.5s;
 
 
 // Por si usas position:relative este te respete el height 100%
@@ -154,6 +159,45 @@ small{
     color: red !important;
     display: flex;
     justify-content: center;
+}
+
+.btn{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 6px 16px !important;
+    border: 1px solid !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    line-height: 1.5 !important;
+    transition: all 150ms !important;
+    border-radius: 4px !important;
+    width: fit-content !important;
+    font-size: 0.85rem !important;
+    color:$black-1 !important;
+    background-color: $gray-2 !important;
+    border-color: $gray-2 !important;
+    &--backpo{
+        background-color: #F5F5F5 !important;
+        border-color: #B2B2B2 !important;
+        color: black !important;
+        margin-left: 15px !important;
+        &:hover{
+            background-color: #E5E5E5 !important;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+        }
+    }
+    &--continue{
+        background-color: #308BF8 !important;
+        border-color: #125AB2 !important;
+        color: #fff !important;
+        // margin-left: auto !important;
+        &:hover{
+            background-color: #1467CC !important;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+        }
+    }
 }
 
 .groupLine{

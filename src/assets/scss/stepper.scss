@@ -152,47 +152,47 @@ $transition:0.5s;
     justify-content: end;
     align-items: flex-end;
 }
-.btn{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 6px 16px !important;
-    border: 1px solid !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-    cursor: pointer !important;
-    line-height: 1.5 !important;
-    transition: all 150ms !important;
-    border-radius: 4px !important;
-    width: fit-content !important;
-    font-size: 0.85rem !important;
-    color:$black-1 !important;
-    background-color: $gray-2 !important;
-    border-color: $gray-2 !important;
+// .btn{
+//     display: flex !important;
+//     justify-content: center !important;
+//     align-items: center !important;
+//     padding: 6px 16px !important;
+//     border: 1px solid !important;
+//     text-align: center !important;
+//     vertical-align: middle !important;
+//     cursor: pointer !important;
+//     line-height: 1.5 !important;
+//     transition: all 150ms !important;
+//     border-radius: 4px !important;
+//     width: fit-content !important;
+//     font-size: 0.85rem !important;
+//     color:$black-1 !important;
+//     background-color: $gray-2 !important;
+//     border-color: $gray-2 !important;
 
-    &:disabled{
-        opacity: 0.5 !important;
-        pointer-events: none !important;
-    }
-    &--green-1{
-        background-color: $stepper-bar-background !important;
-        border-color: $stepper-bar-background !important;
-        color: #fff !important;
-        margin-left: auto !important;
-    }
-    &--yellow-1{
-        background-color: #fbd950 !important;
-        border-color: #fbd950 !important;
-    }
-    &--gray-1{
-        background-color: transparent !important;
-        border-color: transparent !important;
-        &:hover{
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
-            color: $green-1 !important;
-        }
-    }
-}
+//     &:disabled{
+//         opacity: 0.5 !important;
+//         pointer-events: none !important;
+//     }
+//     &--green-1{
+//         background-color: $stepper-bar-background !important;
+//         border-color: $stepper-bar-background !important;
+//         color: #fff !important;
+//         margin-left: auto !important;
+//     }
+//     &--yellow-1{
+//         background-color: #fbd950 !important;
+//         border-color: #fbd950 !important;
+//     }
+//     &--gray-1{
+//         background-color: transparent !important;
+//         border-color: transparent !important;
+//         &:hover{
+//             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+//             color: $green-1 !important;
+//         }
+//     }
+// }
 .btn-back{
     height: 20px;
 }

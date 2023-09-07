@@ -10,9 +10,10 @@
             <div class="card" v-if="obj_data.length>0">
                 <h2 class="blue-text">Scan Items From Purchase Order {{tranid}}</h2>
                 <div class="controls">
-                    <h4 class="messageError" v-if="error">{{ error }}</h4>
-                    <b-button type="button" class="btn btn--green-1" @click="CreateReceipt()">Create Receipt</b-button>
+                    <b-button type="button" class="btn btn--continue" @click="CreateReceipt()">Create Receipt</b-button>
+                    <b-button type="button" class="btn btn--backpo" @click="BackToPO()">Back to PO</b-button>
                 </div>
+                <h4 class="messageError">{{ error }}</h4>
                 <div class="groupLine">
                     <h4 style="width: 9%;">BarCode:</h4>
                     <input v-model="barcode_prev" placeholder="Scan item" style="width: 20%" v-on:keyup.enter="ValidateNDC()" ref="ref_barcode">
@@ -53,7 +54,8 @@
                 </table>
             </div>
             <div class="card" v-else>
-                <h2 class="noLoadPage">No transaction to load was detected, please try again</h2>
+                <h2 v-if="loadingData == true">Loading data...</h2>
+                <h2 class="noLoadPage" v-else>No transaction to load was detected, please try again</h2>
             </div>
             <FooterFreebug />
         </div>
@@ -71,6 +73,7 @@ export default {
     data: ()=>({
         idTransaction: '',
         tranid: '',
+        loadingData: true,
         barcode: '',
         barcode_prev: '',
         error: '',
@@ -163,8 +166,11 @@ export default {
                     console.log("RESP full search: ", b.data);
                     this.obj_data=b.data;
                     console.log("OBJ_DATA:", this.obj_data);
-                    this.tranid=b.data[0].tranid;
-                    console.log('tranid:', this.tranid);
+                    if (this.obj_data) {
+                        this.tranid=b.data[0].tranid;
+                        console.log('tranid:', this.tranid);
+                    }
+                    this.loadingData = false;
                 }).catch((err) => {
                     console.log("Hubo errores: ", err);
                 });
@@ -290,6 +296,42 @@ export default {
                 console.log('Datos send: ', this.obj_data);
             } catch (error) {
                 console.error('CreateReceipt', error);
+            }
+        },
+        BackToPO(){
+            try {
+                console.log('transaction to send: ' + this.idTransaction);
+                let self = this;
+                console.log("getSearchData -self:", self);
+                let str = `
+                    var urlMode=null;
+                
+                    require(['N/url'],function(urlMode){
+                        var protocol = 'https://'
+                        var domain = urlMode.resolveDomain({
+                            hostType: urlMode.HostType.APPLICATION
+                        });
+                        var url=urlMode.resolveRecord({
+                            recordType: 'purchaseorder',
+                            recordId: self.idTransaction
+                        });
+                        var completeUrl = protocol+domain+url;
+                        self.getPoURL(completeUrl)
+                    });
+                `;
+                console.log('AfterRequest');
+                eval(str);
+                console.log('AfterEval');
+            } catch (error) {
+                console.error('BackToPO', error);
+            }
+        },
+        getPoURL(e){
+            try {
+                console.log('url: ' + e);
+                window.location.href= e;
+            } catch (error) {
+                console.error('getPoUrl', error);
             }
         }
     }
