@@ -153,6 +153,11 @@ small{
 
 .messageError{
     color: red !important;
+    float: right !important;
+    font-size: 1.3rem !important;
+    vertical-align: middle !important;
+    margin: unset;
+    padding: unset;
 }
 
 .noLoadPage{
@@ -200,11 +205,34 @@ small{
     }
 }
 
+.scanInput{
+    width: 20% !important;
+    height: 30px !important;
+    vertical-align: middle !important;
+}
+
+.scanLabel{
+    font-size: 1.3rem !important;
+    vertical-align: middle !important;
+}
+
+.button-scan{
+    float: right;
+    align-items: flex-end;
+    justify-content: end;
+    display: flex;
+    margin: unset;
+    padding: unset;
+}
+
 .groupLine{
     display: flex;
-    // margin-top: 30px;
-    // justify-content: end;
-    // align-items: flex-end;
+    align-items: center;
+    &--button-msg{
+        justify-content: space-between;
+        margin: unset;
+        padding: unset;
+    }
 }
 
 .topNavBarC {

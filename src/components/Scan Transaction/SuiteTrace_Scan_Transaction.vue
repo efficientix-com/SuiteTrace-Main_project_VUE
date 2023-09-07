@@ -9,18 +9,20 @@
         <div class="moduleComponent">
             <div class="card" v-if="obj_data.length>0">
                 <h2 class="blue-text">Scan Items From Purchase Order {{tranid}}</h2>
-                <div class="controls">
-                    <b-button type="button" class="btn btn--continue" @click="CreateReceipt()">Create Receipt</b-button>
-                    <b-button type="button" class="btn btn--backpo" @click="BackToPO()">Back to PO</b-button>
+                <div class="groupLine groupLine--button-msg">
+                    <h4 class="messageError">{{ error }}</h4>
+                    <div class="button-scan">
+                        <b-button type="button" class="btn btn--continue" @click="CreateReceipt()">Create Receipt</b-button>
+                        <b-button type="button" class="btn btn--backpo" @click="BackToPO()">Back to PO</b-button>
+                    </div>
                 </div>
-                <h4 class="messageError">{{ error }}</h4>
                 <div class="groupLine">
-                    <h4 style="width: 9%;">BarCode:</h4>
-                    <input v-model="barcode_prev" placeholder="Scan item" style="width: 20%" v-on:keyup.enter="ValidateNDC()" ref="ref_barcode">
-                    <h4 style="width: 8%; padding-left: 30px;" v-if="barcode">Lot:</h4>
-                    <input v-model="scanLot_prev" placeholder="Scan lot" style="width: 20%" v-on:keyup.enter="AddLot()" ref="ref_lot" v-if="barcode">
-                    <h4 style="width: 12%; padding-left: 30px;" v-if="scanLot && barcode">Quantity:</h4>
-                    <input type="number" v-model="scanquantity" placeholder="Enter quantity" style="width: 20%" v-on:keyup.enter="AddQuantity()" ref="ref_qua" v-if="scanLot && barcode">
+                    <h4 style="width: 9%;" class="scanLabel">BarCode:</h4>
+                    <input v-model="barcode_prev" placeholder="Scan item" class="scanInput" v-on:keyup.enter="ValidateNDC()" ref="ref_barcode">
+                    <h4 style="width: 8%; padding-left: 30px;" class="scanLabel" v-if="barcode">Lot:</h4>
+                    <input v-model="scanLot_prev" placeholder="Scan lot" class="scanInput" v-on:keyup.enter="AddLot()" ref="ref_lot" v-if="barcode">
+                    <h4 style="width: 12%; padding-left: 30px;" class="scanLabel" v-if="scanLot && barcode">Quantity:</h4>
+                    <input type="number" v-model="scanquantity" placeholder="Enter quantity" class="scanInput" v-on:keyup.enter="AddQuantity()" ref="ref_qua" v-if="scanLot && barcode">
                 </div>
                 <table class="table mt-3 px-2" id="datatable_purchase_receipts">
                     <thead>
@@ -81,36 +83,33 @@ export default {
         scanLot_prev: '',
         scanquantity: '',
         indexItemfound: '',
-        obj_data: [
-            {
-                item: '10693',
-                item_name: 'Splash',
-                item_ndc: "750101135068",
-                quantityuom: '2',
-                unit: 'Syringe',
-                missing: '2',
-                scanned_quantity: '0',
-                lot: ''
-            },
-            {
-                item: '10694',
-                item_name: 'Lechuga',
-                item_ndc: "7502246460226",
-                quantityuom: '3',
-                unit: 'Syringe',
-                missing: '3',
-                scanned_quantity: '0',
-                lot: ''
-            }
-        ]
-        // obj_data: []
+        // obj_data: [
+        //     {
+        //         item: '10693',
+        //         item_name: 'Splash',
+        //         item_ndc: "750101135068",
+        //         quantityuom: '2',
+        //         unit: 'Syringe',
+        //         missing: '2',
+        //         scanned_quantity: '0',
+        //         lot: ''
+        //     },
+        //     {
+        //         item: '10694',
+        //         item_name: 'Lechuga',
+        //         item_ndc: "7502246460226",
+        //         quantityuom: '3',
+        //         unit: 'Syringe',
+        //         missing: '3',
+        //         scanned_quantity: '0',
+        //         lot: ''
+        //     }
+        // ]
+        obj_data: []
     }),
     mounted (){
         let paramsUrl = this.$route.query;
         this.searchTransaction(paramsUrl);
-        if(this.obj_data.length>0){
-            this.$refs.ref_barcode.focus();
-        }
     },
     methods: {
         searchTransaction (paramsUrl){
@@ -169,6 +168,11 @@ export default {
                     if (this.obj_data) {
                         this.tranid=b.data[0].tranid;
                         console.log('tranid:', this.tranid);
+                        if(this.obj_data.length>0){
+                            setTimeout(() => {
+                                this.$refs.ref_barcode.focus();
+                            }, 1000);
+                        }
                     }
                     this.loadingData = false;
                 }).catch((err) => {
@@ -293,9 +297,54 @@ export default {
         },
         CreateReceipt(){
             try {
-                console.log('Datos send: ', this.obj_data);
+                let self = this;
+                console.log("getSearchData -self:", self);
+                let str = `
+                    var urlMode=null;
+                    require(['N/url'],function(urlMode){
+                    var url=urlMode.resolveScript({
+                        scriptId:'customscript_tkio_wetrackntrace_serv_sl',
+                        deploymentId:"customdeploy_tkio_wetrackntrace_serv_sl",
+                        returnExternalUrl:false,
+                        params:{action:"createReceipt", transaction: self.idTransaction}
+                    });
+                    self.EjecuteReceipt(url)
+                    });
+                `;
+                console.log('AfterRequest');
+                eval(str);
+                console.log('AfterEval');
             } catch (error) {
                 console.error('CreateReceipt', error);
+            }
+        },
+        EjecuteReceipt(e){
+            try {
+                console.log('url: ' + e);
+                let dataString = JSON.stringify(this.obj_data);
+                console.log('Datos send: ', dataString);
+                const t = {
+                    method: "POST",
+                    url: e,
+                    headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET,PUT,POST,OPTIONS",
+                    "Access-Control-Allow-Headers": "authorization",
+                    },
+                    data: dataString,
+                };
+                axios.request(t).then((b) => {
+                    let resultReceipt=b.data;
+                    console.log("resultReceipt:", resultReceipt);
+                    if (resultReceipt.userError != '') {
+                        this.error = resultReceipt.userError;
+                    }
+                }).catch((err) => {
+                    console.log("Hubo errores ejecuteReceipt: ", err);
+                });
+            } catch (error) {
+                console.error('ejecuteReceipt', error);
             }
         },
         BackToPO(){
