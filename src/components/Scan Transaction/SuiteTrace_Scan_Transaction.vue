@@ -17,12 +17,17 @@
                     </div>
                 </div>
                 <div class="groupLine">
-                    <h4 style="width: 9%;" class="scanLabel">BarCode:</h4>
-                    <input v-model="barcode_prev" placeholder="Scan item" class="scanInput" v-on:keyup.enter="ValidateNDC()" ref="ref_barcode">
+                    <h4 style="width: 9%;" class="scanLabel">Barcode:</h4>
+                    <input v-model="barcode_prev" placeholder="Scan item" class="scanInput" v-on:keyup.enter="ValidateNDC()" ref="ref_barcode" >
+
                     <h4 style="width: 8%; padding-left: 30px;" class="scanLabel" v-if="barcode">Lot:</h4>
                     <input v-model="scanLot_prev" placeholder="Scan lot" class="scanInput" v-on:keyup.enter="AddLot()" ref="ref_lot" v-if="barcode">
+
                     <h4 style="width: 12%; padding-left: 30px;" class="scanLabel" v-if="scanLot && barcode">Quantity:</h4>
-                    <input type="number" v-model="scanquantity" placeholder="Enter quantity" class="scanInput" v-on:keyup.enter="AddQuantity()" ref="ref_qua" v-if="scanLot && barcode">
+                    <input type="number" v-model="scanquantity_prev" placeholder="Enter quantity" class="scanInput" v-on:keyup.enter="AddQuantity()" ref="ref_qua"  v-if="scanLot && barcode">
+
+                    <h4 style="width: 12%; padding-left: 30px;" class="scanLabel" v-if="scanLot && barcode && scanquantity">Expiration:</h4>
+                    <input type="date" v-model="scanDate" class="scanInput" ref="ref_date" v-if="scanLot && barcode && scanquantity"/>
                 </div>
                 <table class="table mt-3 px-2" id="datatable_purchase_receipts">
                     <thead>
@@ -31,9 +36,10 @@
                             <th>Description</th>
                             <th>UOM</th>
                             <th>PO quantity</th>
-                            <th>Lot</th>
-                            <th>Scanned quantity</th>
                             <th>Missing</th>
+                            <th>Scanned quantity</th>
+                            <th>Lot</th>
+                            <th>Expiration Date</th>
                             <th>Clean</th>
                         </tr>
                     </thead>
@@ -42,11 +48,12 @@
                         <td>{{ line_data.item_name }}</td>
                         <td>{{ line_data.unit }}</td>
                         <td>{{ line_data.quantityuom }}</td>
-                        <td v-html="line_data.lot"></td>
-                        <td v-html="line_data.scanned_quantity"></td>
                         <td>{{ line_data.missing }}</td>
+                        <td v-html="line_data.scanned_quantity"></td>
+                        <td v-html="line_data.lot"></td>
+                        <td v-html="line_data.expiration_date"></td>
                         <td>
-                            <div class="d-flex justify-content-center" v-if=" line_data.scanned_quantity!=0 ">
+                            <div class="d-flex justify-content-center" v-if=" line_data.expiration_date!='' ">
                                 <div class="option-item-btn btn btn-light text-center" @click="CleanLine(line_data)">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
                                 </div>
@@ -82,6 +89,8 @@ export default {
         scanLot: '',
         scanLot_prev: '',
         scanquantity: '',
+        scanquantity_prev: '',
+        scanDate: '',
         indexItemfound: '',
         // obj_data: [
         //     {
@@ -92,7 +101,8 @@ export default {
         //         unit: 'Syringe',
         //         missing: '2',
         //         scanned_quantity: '0',
-        //         lot: ''
+        //         lot: '',
+        //         expiration_date: ''
         //     },
         //     {
         //         item: '10694',
@@ -102,7 +112,8 @@ export default {
         //         unit: 'Syringe',
         //         missing: '3',
         //         scanned_quantity: '0',
-        //         lot: ''
+        //         lot: '',
+        //         expiration_date: ''
         //     }
         // ]
         obj_data: []
@@ -110,6 +121,29 @@ export default {
     mounted (){
         let paramsUrl = this.$route.query;
         this.searchTransaction(paramsUrl);
+    },
+    watch : {
+        scanDate(newValue, oldValue){
+            console.log('datos:', {newValue: newValue, oldValue: oldValue});
+            console.log('type newValue', typeof newValue);
+            if (this.obj_data[this.indexItemfound].expiration_date) {
+                this.obj_data[this.indexItemfound].expiration_date = this.obj_data[this.indexItemfound].expiration_date +'<br/>'+ newValue;
+            }else{
+                this.obj_data[this.indexItemfound].expiration_date = newValue;
+            }
+            this.barcode ='';
+            this.barcode_prev = '';
+            this.scanquantity = '';
+            this.scanquantity_prev = '';
+            this.scanLot = '';
+            this.scanLot_prev='';
+            this.indexItemfound ='';
+            this.scanDate = '';
+            this.error = '';
+            setTimeout(() => {
+                this.$refs.ref_barcode.focus();
+            }, 1000);
+        }
     },
     methods: {
         searchTransaction (paramsUrl){
@@ -243,7 +277,8 @@ export default {
         },
         AddQuantity(){
             try {
-                if (this.scanquantity <= (this.obj_data[this.indexItemfound].missing)*1) {
+                if (this.scanquantity_prev <= (this.obj_data[this.indexItemfound].missing)*1) {
+                    this.scanquantity = this.scanquantity_prev;
                     let missingItems = ((this.obj_data[this.indexItemfound].missing)*1) - this.scanquantity;
                     
                     this.obj_data[this.indexItemfound].missing = missingItems;
@@ -260,14 +295,16 @@ export default {
                         this.obj_data[this.indexItemfound].scanned_quantity = scanquantity;
                     }
 
-                    this.barcode ='';
-                    this.barcode_prev = '';
-                    this.scanquantity = '';
-                    this.scanLot = '';
-                    this.scanLot_prev='';
-                    this.indexItemfound ='';
+                    // this.barcode ='';
+                    // this.barcode_prev = '';
+                    // this.scanquantity = '';
+                    // this.scanLot = '';
+                    // this.scanLot_prev='';
+                    // this.indexItemfound ='';
                     this.error = '';
-                    this.$refs.ref_barcode.focus();
+                    setTimeout(() => {
+                        this.$refs.ref_date.focus();
+                    }, 1000);
                 }else{
                     this.error = 'You cannot capture more than the quantity in the Purchase Order, expected: ' + this.obj_data[this.indexItemfound].missing;
                 }
@@ -281,14 +318,17 @@ export default {
                 let indexObj = this.obj_data.findIndex((element) => element.item_ndc == lineData.item_ndc);
                 console.log('indexObj: ' + indexObj);
                 this.obj_data[indexObj].lot = '';
+                this.obj_data[indexObj].expiration_date = '';
                 this.obj_data[indexObj].missing = this.obj_data[indexObj].quantityuom;
                 this.obj_data[indexObj].scanned_quantity = 0;
                 this.barcode ='';
                 this.barcode_prev = '';
                 this.scanquantity = '';
+                this.scanquantity_prev = '';
                 this.scanLot = '';
                 this.scanLot_prev='';
                 this.indexItemfound ='';
+                this.scanDate = '';
                 this.error = '';
                 this.$refs.ref_barcode.focus();
             } catch (error) {
@@ -339,6 +379,9 @@ export default {
                     console.log("resultReceipt:", resultReceipt);
                     if (resultReceipt.userError != '') {
                         this.error = resultReceipt.userError;
+                    }else{
+                        console.log('redireccionando: ', resultReceipt.urlReceipt);
+                        window.location.href= resultReceipt.urlReceipt;
                     }
                 }).catch((err) => {
                     console.log("Hubo errores ejecuteReceipt: ", err);
