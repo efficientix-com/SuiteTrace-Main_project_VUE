@@ -197,12 +197,17 @@ small{
         background-color: #308BF8 !important;
         border-color: #125AB2 !important;
         color: #fff !important;
-        // margin-left: auto !important;
+        margin-left: 25px !important;
         &:hover{
             background-color: #1467CC !important;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
         }
     }
+}
+
+.scanTd{
+    text-align: center !important;
+    // border: solid 1px #DEE2E6;
 }
 
 .scanInput{
